@@ -29,7 +29,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"schemaname": "dbo",
-							"tablename": "test"
+							"tablename": "test",
+							"libconnection": "libconnection"
 						}
 					},
 					"firstRowOnly": false
