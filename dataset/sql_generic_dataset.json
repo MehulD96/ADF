@@ -5,7 +5,10 @@
 			"referenceName": "aql_db_ls",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"connectionsecret": "libconnection"
+				"connectionsecret": {
+					"value": "@dataset().libconnection",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
@@ -14,6 +17,10 @@
 			},
 			"tablename": {
 				"type": "string"
+			},
+			"libconnection": {
+				"type": "string",
+				"defaultValue": "libconnection"
 			}
 		},
 		"annotations": [],
