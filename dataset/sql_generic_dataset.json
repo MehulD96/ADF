@@ -2,8 +2,11 @@
 	"name": "sql_generic_dataset",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
-			"type": "LinkedServiceReference"
+			"referenceName": "aql_db_ls",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"connectionsecret": "libconnection"
+			}
 		},
 		"parameters": {
 			"schemaname": {
