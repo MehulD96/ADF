@@ -1,0 +1,121 @@
+{
+	"name": "copy data if greater than given number",
+	"properties": {
+		"description": "copy data if greater than given number without foreach activity, here we created a variable Recordcount and stored the total number of records in it by the help of SQL query and then check the Recordcount in if condition using greater than function firstrow.Recordcount and if condition is true then copy the data.",
+		"activities": [
+			{
+				"name": "find total count in a table and set as recordcount",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select count(*) as RecordCount from SalesLT.CustomerAddress ",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "sql_generic_dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaname": "SalesLT",
+							"tablename": "CustomerAddress"
+						}
+					},
+					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "copy if recordcount greater than given number",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "find total count in a table and set as recordcount",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('find total count in a table and set as recordcount').output.firstRow.RecordCount,5)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy data1 in lookup",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "sql_generic_dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"schemaname": "SalesLT",
+										"tablename": "ProductDescription"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_generic_dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"data": "Newdatas"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-02-28T17:20:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "1stdatafactorymehul",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1983a134-f2d4-4a5c-ba12-d8e8552913f7",
+		"tenantId": "e62c3606-d7bf-4823-9bc1-93f2eb800c4c"
+	}
+}
